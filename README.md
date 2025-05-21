@@ -1,5 +1,5 @@
 # 💫 About Me:
-🔭 I’m currently working on ML Projects<br>🌱 I’m currently learning AWS<br>👯 I’m looking to collaborate on a summer internship<br>🤔 I’m looking for help with getting started with open source contributions<br>📫 How to reach me: https://www.linkedin.com/in/asmi-dipransh/<br>😄 Pronouns: she/her<br>⚡ Fun fact: I'm a jack of all trades kinda person
+🔭 I’m currently working on ML Projects<br>🌱 I’m currently learning AWS<br>👯 I’m looking to collaborate on a summer internship<br>🤔 I’m looking for help with getting started with open source contributions<br>📫 How to reach me: https://www.linkedin.com/in/asmi-dipransh/<br>⚡ Fun fact: I'm a jack of all trades kinda person
 
 
 ## 🌐 Socials:
