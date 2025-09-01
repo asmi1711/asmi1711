@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "cJSON.h"
+
+// Convert string in given base to decimal (long long)
+long long baseToDecimal(const char *numStr, int base) {
+    return strtoll(numStr, NULL, base);
+}
+
+int main() {
+    // Load JSON file
+    FILE *fp = fopen("input.json", "r");
+    if (!fp) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char *jsonStr = malloc(fsize + 1);
+    fread(jsonStr, 1, fsize, fp);
+    fclose(fp);
+    jsonStr[fsize] = 0;
+
+    // Parse JSON
+    cJSON *json = cJSON_Parse(jsonStr);
+    if (!json) {
+        printf("Error parsing JSON\n");
+        return 1;
+    }
+
+    cJSON *keys = cJSON_GetObjectItem(json, "keys");
+    int k = cJSON_GetObjectItem(keys, "k")->valueint;
+
+    long long roots[k];
+
+    for (int i = 1; i <= k; i++) {
+        char indexStr[10];
+        sprintf(indexStr, "%d", i);
+        cJSON *item = cJSON_GetObjectItem(json, indexStr);
+        if (item) {
+            int base = atoi(cJSON_GetObjectItem(item, "base")->valuestring);
+            const char *val = cJSON_GetObjectItem(item, "value")->valuestring;
+            roots[i-1] = baseToDecimal(val, base);
+        }
+    }
+
+    // Build forward difference table
+    long long diff[k][k];
+    for (int i = 0; i < k; i++) {
+        diff[0][i] = roots[i];
+    }
+    for (int order = 1; order < k; order++) {
+        for (int i = 0; i < k - order; i++) {
+            diff[order][i] = diff[order-1][i+1] - diff[order-1][i];
+        }
+    }
+
+    // Compute constant term using Newton interpolation at x=0
+    long long c = 0;
+    for (int order = 0; order < k; order++) {
+        long long term = diff[order][0];
+        if (order % 2 != 0) term = -term; // apply (-1)^order
+        c += term;
+    }
+
+    printf("Constant term c = %lld\n", c);
+
+    // Cleanup
+    cJSON_Delete(json);
+    free(jsonStr);
+    return 0;
+}
